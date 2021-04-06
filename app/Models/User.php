@@ -12,7 +12,10 @@ class User extends Authenticatable
     [
         'name', 
         'last_name', 
-        'age'
+        'age',
+        'data_b',
+        'password',
+        'number'
     ];
 
     public $timestamps = false;

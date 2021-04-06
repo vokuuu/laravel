@@ -20,3 +20,4 @@ use App\Models\News;
 Route::get('/getusers/', 'App\Http\Controllers\UsController@getUsers');
 Route::post('/addusers/', 'App\Http\Controllers\UsController@addUser');
 Route::patch('/apdateusers/', 'App\Http\Controllers\UsController@apdateUser');
+Route::get('/registuгser/', 'App\Http\Controllers\UsController@registrUser');

@@ -41,4 +41,48 @@ class UsController extends Controller
 
     	return response()->json($user);
     }
+
+    public function registrUser(Request $hme)
+    {
+    	$ujas= true;
+        $pomogiti ="";
+        if($hme->name == null)
+        {
+            $ujas = false;
+            $pomogiti .='поле name не заполнено ';
+        }
+        if($hme->last_name == null)
+        {
+            $ujas = false;
+            $pomogiti .='поле last_name не заполнено ';
+        }
+        if($hme->age == null)
+        {
+           $ujas = false;
+            $pomogiti .='поле age не заполнено ';
+        }
+        if($hme->data_b == null)
+        {
+            $ujas = false;
+            $pomogiti .='поле data_b не заполнено ';
+        }
+        if($hme->password == null)
+        {
+            $ujas = false;
+            $pomogiti .='поле password не заполнено ';
+        }
+        if($hme->number == null)
+        {
+            $ujas = false;
+            $pomogiti .='поле number не заполнено ';
+        }
+        if($ujas == true)
+        {
+            $student = new User();
+            $student -> create($hme->all());
+            $pomogiti = 'ALL OK';
+        }
+        return response()->json($pomogiti);
+    }
+
 }
