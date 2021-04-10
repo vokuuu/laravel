@@ -78,11 +78,23 @@ class UsController extends Controller
         }
         if($ujas == true)
         {
-            $student = new User();
-            $student -> create($hme->all());
+            $user = new User();
+            $user -> create($hme->all());
             $pomogiti = 'ALL OK';
         }
         return response()->json($pomogiti);
     }
 
+    public function autorizUser(Request $req)
+    {
+        $user = User::where('number', $req->number)->first();
+
+        if(!$user)
+        	return response()->json('Логин не введен. Пожалуйста, введи логин или выйдите за дверь!');
+
+        if($req->password != $user->password)
+
+            return response()->json('Пароль не введен. Пожалуйста, введи пароль или выйдите за дверь!');
+        return response()->json('Норм поц! Залетай!'); 
+    }
 }
