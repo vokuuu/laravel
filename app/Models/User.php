@@ -15,7 +15,8 @@ class User extends Authenticatable
         'age',
         'data_b',
         'password',
-        'number'
+        'number',
+        'api_token'
     ];
 
     public $timestamps = false;

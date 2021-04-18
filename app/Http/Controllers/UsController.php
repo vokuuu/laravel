@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator; //add
 use App\Models\User;
+use Illuminate\Support\Str;
+
 
 class UsController extends Controller
 {
@@ -85,16 +87,78 @@ class UsController extends Controller
         return response()->json($pomogiti);
     }
 
-    public function autorizUser(Request $req)
+    public function autorizUser(Request $hme)
     {
-        $user = User::where('number', $req->number)->first();
+
+        $user = User::where('number', $hme->number)->first();
 
         if(!$user)
         	return response()->json('Логин не введен. Пожалуйста, введи логин или выйдите за дверь!');
 
-        if($req->password != $user->password)
+        if($hme->password != $user->password)
 
             return response()->json('Пароль не введен. Пожалуйста, введи пароль или выйдите за дверь!');
-        return response()->json('Норм поц! Залетай!'); 
+        return response()->json('Норм поц! Залетай!');
     }
+
+    
+
+    //============================ВАЛИДАЦИЯ============================//
+
+    public function registrValid(Request $hme)
+    {
+        $valid = Validator::make($hme->all(), [
+        'name' => 'required',
+        'last_name' => 'required',
+        'age' => 'required',
+        'data_b' => 'required',
+        'password' => 'required',
+        'number' => 'required',
+         ]);
+
+        if ($valid->fails())
+            return response()->json($valid->errors());
+
+        $user = User::create($hme->all());
+        return response()->json('ОК ( - 3 -)');
+    }
+
+
+
+     public function loginValid(Request $hme) 
+    {
+        $valid = Validator::make($hme->all(), [
+            'number' => 'required',
+            'password' => 'required',
+        ]);
+
+        if ($valid->fails()) {
+            return response()->json($valid->errors());
+        }
+
+        if($user = User::where('number', $hme->number)->first())
+        {
+            if ($hme->password == $user->password)
+            {
+                $user->api_token=Str::random(50);
+                $user->save();
+                return response()->json('Авторизация OK, api_token:'. $user->api_token);
+            }
+        }
+                return response()->json('Логин или пароль не OK, api_token:'. $user->api_token);
+    }
+
+    public function logoutValid(Request $hme)
+        {
+            $user = User::where("api_token",$hme->api_token)->first();
+
+            if($user)
+            {
+                $user->api_token = "0";
+                $user->save();
+                return response()->json('Разлогирование прошло успешно');
+            }
+        }
 }
+
+
